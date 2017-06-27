@@ -24,6 +24,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
+
 #include <naoqi_driver/message_actions.h>
 #include <naoqi_driver/recorder/globalrecorder.hpp>
 #include <naoqi_driver/tools.hpp>
@@ -53,6 +55,11 @@ public:
   Event( T event ):
     eventPtr_( boost::make_shared<EventModel<T> >(event) )
   {}
+
+  void resetPublisher( std::shared_ptr<rclcpp::node::Node> node )
+  {
+    eventPtr_->resetPublisher(node);
+  }
 
   void resetPublisher( ros::NodeHandle& nh )
   {
@@ -108,6 +115,7 @@ private:
   {
     virtual ~EventConcept(){}
     virtual void resetPublisher(ros::NodeHandle& nh) = 0;
+    virtual void resetPublisher(std::shared_ptr<rclcpp::node::Node> node) = 0;
     virtual void resetRecorder(boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr) = 0;
     virtual void startProcess() = 0;
     virtual void stopProcess() = 0;
@@ -128,6 +136,11 @@ private:
     EventModel( const T& other ):
       converter_( other )
     {}
+
+    void resetPublisher( std::shared_ptr<rclcpp::node::Node> node )
+    {
+      converter_->resetPublisher(node);
+    }
 
     void resetPublisher( ros::NodeHandle& nh )
     {

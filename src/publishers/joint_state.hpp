@@ -26,6 +26,11 @@
 #include <sensor_msgs/JointState.h>
 #include <tf2_ros/transform_broadcaster.h>
 
+/*
+* ROS2 includes
+*/
+#include <rclcpp/rclcpp.hpp>
+
 namespace naoqi
 {
 namespace publisher
@@ -49,6 +54,8 @@ public:
 
   virtual void publish( const sensor_msgs::JointState& js_msg,
                         const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
+
+  virtual void reset( std::shared_ptr<rclcpp::node::Node> node );
 
   virtual void reset( ros::NodeHandle& nh );
 

@@ -32,6 +32,11 @@ InfoPublisher::InfoPublisher(const std::string& topic , const robot::Robot& robo
 {
 }
 
+void InfoPublisher::reset( std::shared_ptr<rclcpp::node::Node> node )
+{
+  // TODO(esteve): implement
+}
+
 void InfoPublisher::reset( ros::NodeHandle& nh )
 {
   // We latch as we only publish once

@@ -24,6 +24,11 @@
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 
+/*
+* ROS2 includes
+*/
+#include <rclcpp/rclcpp.hpp>
+
 namespace naoqi
 {
 namespace publisher
@@ -47,6 +52,8 @@ public:
   }
 
   void publish( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
+
+  void reset( std::shared_ptr<rclcpp::node::Node> node );
 
   void reset( ros::NodeHandle& nh );
 

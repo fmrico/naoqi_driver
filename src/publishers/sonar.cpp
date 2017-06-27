@@ -45,6 +45,11 @@ void SonarPublisher::publish( const std::vector<sensor_msgs::Range>& sonar_msgs 
   }
 }
 
+void SonarPublisher::reset( std::shared_ptr<rclcpp::node::Node> node )
+{
+  // TODO(esteve): implement
+}
+
 void SonarPublisher::reset( ros::NodeHandle& nh )
 {
   pubs_ = std::vector<ros::Publisher>();

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(naoqi_driver)
 
 # define source files that can be used by qibuild or catkin
@@ -72,9 +72,15 @@ set(
 if(DEFINED qibuild_DIR)
   find_package(qibuild QUIET)
 else()
-  find_package(catkin QUIET)
-  include(CMakeLists_catkin.txt)
-  return()
+  find_package(ament_cmake QUIET)
+  if(ament_cmake_FOUND)
+    include(CMakeLists_ament.txt)
+    return()
+  else()
+    find_package(catkin QUIET)
+    include(CMakeLists_catkin.txt)
+    return()
+  endif()
 endif()
 
 find_package(qimodule)

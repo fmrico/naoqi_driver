@@ -108,6 +108,11 @@
 #include <boost/property_tree/json_parser.hpp>
 #define for_each BOOST_FOREACH
 
+/*
+ * ROS2
+ */
+#include "rclcpp/rclcpp.hpp"
+
 #define DEBUG 0
 
 namespace naoqi
@@ -132,6 +137,17 @@ Driver::Driver( qi::SessionPtr session, const std::string& prefix )
     naoqi::ros_env::setPrefix(prefix);
   }
 
+  // ROS2 Init
+  std::cout << "ROS2 init" << std::endl;
+  rclcpp::init(0, nullptr);
+
+  std::cout << "ROS2 executor init" << std::endl;
+  ros2_executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+
+  std::cout << "ROS2 node init" << std::endl;
+  ros2_node_ = std::make_shared<rclcpp::node::Node>("~");
+
+  ros2_executor_->add_node(ros2_node_);
 }
 
 Driver::~Driver()
@@ -143,6 +159,9 @@ Driver::~Driver()
     nhPtr_->shutdown();
     ros::shutdown();
   }
+
+  ros2_executor_->remove_node(ros2_node_);
+  rclcpp::shutdown();
 }
 
 void Driver::init()
@@ -250,6 +269,7 @@ void Driver::rosLoop()
     if ( publish_enabled_ )
     {
       ros::spinOnce();
+      ros2_executor_->spin_once();
     }
   } // while loop
 }
@@ -429,6 +449,7 @@ void Driver::registerPublisher( const std::string& conv_name, publisher::Publish
 {
   if (publish_enabled_) {
     pub.reset(*nhPtr_);
+    pub.reset(ros2_node_);
   }
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
@@ -956,6 +977,7 @@ void Driver::setMasterURINet( const std::string& uri, const std::string& network
     for_each( publisher_map::value_type &pub, pub_map_ )
     {
       pub.second.reset(*nhPtr_);
+      pub.second.reset(ros2_node_);
     }
 
     for_each( subscriber::Subscriber& sub, subscribers_ )
@@ -976,6 +998,7 @@ void Driver::setMasterURINet( const std::string& uri, const std::string& network
     for_each( event_map::value_type &event, event_map_ )
     {
       event.second.resetPublisher(*nhPtr_);
+      event.second.resetPublisher(ros2_node_);
     }
   }
   // Start publishing again

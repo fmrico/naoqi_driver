@@ -61,7 +61,13 @@ EventRegister<Converter, Publisher, Recorder>::~EventRegister()
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
-void EventRegister<Converter, Publisher, Recorder>::resetPublisher(  ros::NodeHandle& nh )
+void EventRegister<Converter, Publisher, Recorder>::resetPublisher( std::shared_ptr<rclcpp::node::Node> node )
+{
+  publisher_->reset(node);
+}
+
+template <typename Converter, typename Publisher, typename Recorder>
+void EventRegister<Converter, Publisher, Recorder>::resetPublisher( ros::NodeHandle& nh )
 {
   publisher_->reset(nh);
 }

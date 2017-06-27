@@ -46,6 +46,11 @@ void CameraPublisher::publish( const sensor_msgs::ImagePtr& img, const sensor_ms
   pub_.publish( *img, camera_info );
 }
 
+void CameraPublisher::reset( std::shared_ptr<rclcpp::node::Node> node )
+{
+  // TODO(esteve): implement
+}
+
 void CameraPublisher::reset( ros::NodeHandle& nh )
 {
 

@@ -30,6 +30,11 @@
 #include <ros/ros.h>
 #include <naoqi_bridge_msgs/StringStamped.h>
 
+/*
+* ROS2 includes
+*/
+#include <rclcpp/rclcpp.hpp>
+
 namespace naoqi
 {
 namespace publisher
@@ -39,6 +44,8 @@ class InfoPublisher : public BasicPublisher<naoqi_bridge_msgs::StringStamped>
 {
 public:
   InfoPublisher( const std::string& topic, const robot::Robot& robot_type );
+
+  void reset( std::shared_ptr<rclcpp::node::Node> node );
 
   void reset( ros::NodeHandle& nh );
 

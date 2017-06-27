@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<package>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
   <name>naoqi_driver</name>
   <version>0.5.9</version>
   <description>Driver module between Aldebaran's NAOqiOS and ROS. It publishes all sensor and actuator data as well as basic diagnostic for battery, temperature. It subscribes also to RVIZ simple goal and cmd_vel for teleop.</description>
@@ -29,20 +30,28 @@
   <build_depend>tf2_msgs</build_depend>
   <build_depend>tf2_ros</build_depend>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rclcpp</build_depend>
 
-  <run_depend>boost</run_depend>
-  <run_depend>cv_bridge</run_depend>
-  <run_depend>image_transport</run_depend>
-  <run_depend>kdl_parser</run_depend>
-  <run_depend version_gte="0.0.4">naoqi_bridge_msgs</run_depend>
-  <run_depend>naoqi_libqi</run_depend>
-  <run_depend>naoqi_libqicore</run_depend>
-  <run_depend>orocos_kdl</run_depend>
-  <run_depend>robot_state_publisher</run_depend>
-  <run_depend>rosbag_storage</run_depend>
-  <run_depend>tf2_ros</run_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>boost</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>image_transport</exec_depend>
+  <exec_depend>kdl_parser</exec_depend>
+  <exec_depend version_gte="0.0.4">naoqi_bridge_msgs</exec_depend>
+  <exec_depend>naoqi_libqi</exec_depend>
+  <exec_depend>naoqi_libqicore</exec_depend>
+  <exec_depend>orocos_kdl</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rosbag_storage</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+
+  <exec_depend>rclcpp</exec_depend>
 
   <conflict>nao_driver</conflict>
   <conflict>naoqi_rosbridge</conflict>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>

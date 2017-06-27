@@ -24,6 +24,12 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 
+/*
+* ROS2 includes
+*/
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/range.hpp>
+
 namespace naoqi
 {
 namespace publisher
@@ -45,6 +51,8 @@ public:
   }
 
   void publish( const std::vector<sensor_msgs::Range>& sonar_msgs );
+
+  void reset( std::shared_ptr<rclcpp::node::Node> node );
 
   void reset( ros::NodeHandle& nh );
 

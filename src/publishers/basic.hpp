@@ -25,10 +25,35 @@
 */
 #include <ros/ros.h>
 
+/*
+* ROS2 includes
+*/
+#include <rclcpp/rclcpp.hpp>
+
 namespace naoqi
 {
 namespace publisher
 {
+
+template < class T >
+class is_ros2_message
+ {
+private:
+  using Yes = char[2];
+  using  No = char[1];
+
+  struct Fallback { int UniquePtr; };
+  struct Derived : T, Fallback { };
+
+  template < class U >
+  static No& test ( decltype(U::UniquePtr)* );
+  template < typename U >
+  static Yes& test ( U* );
+ 
+ public:
+  static constexpr bool value = sizeof(test<Derived>(nullptr)) == sizeof(Yes);
+  using value_type = typename std::integral_constant<bool, value>::type;
+};
 
 template<class T>
 class BasicPublisher
@@ -55,18 +80,22 @@ public:
   virtual inline bool isSubscribed() const
   {
     if (is_initialized_ == false) return false;
-      return pub_.getNumSubscribers() > 0;
+    return is_ros2_ ? false : pub_.getNumSubscribers() > 0;
   }
 
   virtual void publish( const T& msg )
   {
-    pub_.publish( msg );
+    publishImpl(msg);
   }
 
   virtual void reset( ros::NodeHandle& nh )
   {
-    pub_ = nh.advertise<T>( this->topic_, 10 );
-    is_initialized_ = true;
+    resetROS1Impl(nh);
+  }
+
+  virtual void reset( std::shared_ptr<rclcpp::node::Node> node )
+  {
+    resetROS2Impl(node);
   }
 
 protected:
@@ -74,8 +103,63 @@ protected:
 
   bool is_initialized_;
 
+  const bool is_ros2_ = is_ros2_message<T>::value;
+
   /** Publisher */
   ros::Publisher pub_;
+
+  std::shared_ptr<rclcpp::publisher::Publisher<T>> publisher_;
+
+  template<
+    typename U = T
+  >
+  void publishImpl(const U& msg, typename std::enable_if<!is_ros2_message<U>::value>::type * = nullptr)
+  {
+    pub_.publish( msg );
+  }
+
+  template<
+    typename U = T
+  >
+  void publishImpl(const U& msg, typename std::enable_if<is_ros2_message<U>::value>::type * = nullptr)
+  {
+    publisher_->publish(msg);
+  }
+
+  template<
+    typename U = T
+  >
+  void resetROS1Impl(ros::NodeHandle& nh, typename std::enable_if<!is_ros2_message<U>::value>::type * = nullptr)
+  {
+    pub_ = nh.advertise<T>( this->topic_, 10 );
+    is_initialized_ = true;
+  }
+
+  template<
+    typename U = T
+  >
+  void resetROS1Impl(ros::NodeHandle& nh, typename std::enable_if<is_ros2_message<U>::value>::type * = nullptr)
+  {
+    //static_assert(false, "This should never be reachable");
+  }
+
+  template<
+    typename U = T
+  >
+  void resetROS2Impl(std::shared_ptr<rclcpp::node::Node> node, typename std::enable_if<!is_ros2_message<U>::value>::type * = nullptr)
+  {
+    //static_assert(false, "This should never be reachable");
+  }
+
+  template<
+    typename U = T
+  >
+  void resetROS2Impl(std::shared_ptr<rclcpp::node::Node> node, typename std::enable_if<is_ros2_message<U>::value>::type * = nullptr)
+  {
+    publisher_ = node->create_publisher<U>(this->topic_, 10);
+    is_initialized_ = true;
+  }
+
 }; // class
 
 } // publisher

@@ -63,10 +63,6 @@ public:
     // We assume it is essential
     return true;
   }
-
-private:
-  ros::Publisher pub_;
-
 };
 
 } //publisher

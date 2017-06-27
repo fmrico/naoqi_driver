@@ -20,6 +20,10 @@
 */
 #include "touch.hpp"
 
+#include <naoqi_bridge_msgs/msg/bumper.hpp>
+#include <naoqi_bridge_msgs/msg/hand_touch.hpp>
+#include <naoqi_bridge_msgs/msg/head_touch.hpp>
+
 /*
 * BOOST includes
 */
@@ -62,9 +66,9 @@ void TouchEventConverter<T>::callAll(const std::vector<message_actions::MessageA
 }
 
 // http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor
-template class TouchEventConverter<naoqi_bridge_msgs::Bumper>;
-template class TouchEventConverter<naoqi_bridge_msgs::HandTouch>;
-template class TouchEventConverter<naoqi_bridge_msgs::HeadTouch>;
+template class TouchEventConverter<naoqi_bridge_msgs::msg::Bumper>;
+template class TouchEventConverter<naoqi_bridge_msgs::msg::HandTouch>;
+template class TouchEventConverter<naoqi_bridge_msgs::msg::HeadTouch>;
 }
 
 }

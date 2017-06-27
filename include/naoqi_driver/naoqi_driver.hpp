@@ -46,6 +46,11 @@
 #include <naoqi_driver/event/event.hpp>
 #include <naoqi_driver/recorder/globalrecorder.hpp>
 
+/*
+* ROS2
+*/
+#include "rclcpp/rclcpp.hpp"
+
 namespace tf2_ros
 {
   class Buffer;
@@ -268,6 +273,9 @@ private:
   }
 
   void rosLoop();
+
+  std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> ros2_executor_;
+  std::shared_ptr<rclcpp::node::Node> ros2_node_;
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
