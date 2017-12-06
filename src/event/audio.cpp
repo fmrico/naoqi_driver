@@ -74,7 +74,7 @@ AudioEventRegister::~AudioEventRegister()
   stopProcess();
 }
 
-void AudioEventRegister::resetPublisher(std::shared_ptr<rclcpp::node::Node> node)
+void AudioEventRegister::resetPublisher(std::shared_ptr<rclcpp::Node> node)
 {
   publisher_->reset(node);
 }

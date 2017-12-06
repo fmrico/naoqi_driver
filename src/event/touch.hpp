@@ -71,7 +71,7 @@ public:
   ~TouchEventRegister();
 
   void resetPublisher( ros::NodeHandle& nh );
-  void resetPublisher( std::shared_ptr<rclcpp::node::Node> node );
+  void resetPublisher( std::shared_ptr<rclcpp::Node> node );
   void resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr );
 
   void startProcess();

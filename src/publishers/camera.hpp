@@ -53,7 +53,7 @@ public:
 
   void publish( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
 
-  void reset( std::shared_ptr<rclcpp::node::Node> node );
+  void reset( std::shared_ptr<rclcpp::Node> node );
 
   void reset( ros::NodeHandle& nh );
 

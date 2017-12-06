@@ -275,7 +275,7 @@ private:
   void rosLoop();
 
   std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> ros2_executor_;
-  std::shared_ptr<rclcpp::node::Node> ros2_node_;
+  std::shared_ptr<rclcpp::Node> ros2_node_;
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;

@@ -71,7 +71,7 @@ TouchEventRegister<T>::~TouchEventRegister()
 }
 
 template<class T>
-void TouchEventRegister<T>::resetPublisher(std::shared_ptr<rclcpp::node::Node> node)
+void TouchEventRegister<T>::resetPublisher(std::shared_ptr<rclcpp::Node> node)
 {
   publisher_->reset(node);
 }

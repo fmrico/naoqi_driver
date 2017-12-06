@@ -45,7 +45,7 @@ class InfoPublisher : public BasicPublisher<naoqi_bridge_msgs::StringStamped>
 public:
   InfoPublisher( const std::string& topic, const robot::Robot& robot_type );
 
-  void reset( std::shared_ptr<rclcpp::node::Node> node );
+  void reset( std::shared_ptr<rclcpp::Node> node );
 
   void reset( ros::NodeHandle& nh );
 

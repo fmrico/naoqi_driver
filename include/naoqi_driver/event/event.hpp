@@ -56,7 +56,7 @@ public:
     eventPtr_( boost::make_shared<EventModel<T> >(event) )
   {}
 
-  void resetPublisher( std::shared_ptr<rclcpp::node::Node> node )
+  void resetPublisher( std::shared_ptr<rclcpp::Node> node )
   {
     eventPtr_->resetPublisher(node);
   }
@@ -115,7 +115,7 @@ private:
   {
     virtual ~EventConcept(){}
     virtual void resetPublisher(ros::NodeHandle& nh) = 0;
-    virtual void resetPublisher(std::shared_ptr<rclcpp::node::Node> node) = 0;
+    virtual void resetPublisher(std::shared_ptr<rclcpp::Node> node) = 0;
     virtual void resetRecorder(boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr) = 0;
     virtual void startProcess() = 0;
     virtual void stopProcess() = 0;
@@ -137,7 +137,7 @@ private:
       converter_( other )
     {}
 
-    void resetPublisher( std::shared_ptr<rclcpp::node::Node> node )
+    void resetPublisher( std::shared_ptr<rclcpp::Node> node )
     {
       converter_->resetPublisher(node);
     }

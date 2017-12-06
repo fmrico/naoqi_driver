@@ -41,7 +41,7 @@ void JointStatePublisher::publish( const sensor_msgs::JointState& js_msg,
   tf_broadcasterPtr_->sendTransform(tf_transforms);
 }
 
-void JointStatePublisher::reset( std::shared_ptr<rclcpp::node::Node> node )
+void JointStatePublisher::reset( std::shared_ptr<rclcpp::Node> node )
 {
   // TODO(esteve): implement
 }

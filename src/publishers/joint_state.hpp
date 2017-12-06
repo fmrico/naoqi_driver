@@ -55,7 +55,7 @@ public:
   virtual void publish( const sensor_msgs::JointState& js_msg,
                         const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
 
-  virtual void reset( std::shared_ptr<rclcpp::node::Node> node );
+  virtual void reset( std::shared_ptr<rclcpp::Node> node );
 
   virtual void reset( ros::NodeHandle& nh );
 

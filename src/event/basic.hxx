@@ -61,7 +61,7 @@ EventRegister<Converter, Publisher, Recorder>::~EventRegister()
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
-void EventRegister<Converter, Publisher, Recorder>::resetPublisher( std::shared_ptr<rclcpp::node::Node> node )
+void EventRegister<Converter, Publisher, Recorder>::resetPublisher( std::shared_ptr<rclcpp::Node> node )
 {
   publisher_->reset(node);
 }

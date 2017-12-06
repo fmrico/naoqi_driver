@@ -52,7 +52,7 @@ public:
 
   void publish( const std::vector<sensor_msgs::Range>& sonar_msgs );
 
-  void reset( std::shared_ptr<rclcpp::node::Node> node );
+  void reset( std::shared_ptr<rclcpp::Node> node );
 
   void reset( ros::NodeHandle& nh );
 

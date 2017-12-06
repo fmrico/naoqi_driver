@@ -93,7 +93,7 @@ public:
     resetROS1Impl(nh);
   }
 
-  virtual void reset( std::shared_ptr<rclcpp::node::Node> node )
+  virtual void reset( std::shared_ptr<rclcpp::Node> node )
   {
     resetROS2Impl(node);
   }
@@ -108,7 +108,7 @@ protected:
   /** Publisher */
   ros::Publisher pub_;
 
-  std::shared_ptr<rclcpp::publisher::Publisher<T>> publisher_;
+  std::shared_ptr<rclcpp::Publisher<T>> publisher_;
 
   template<
     typename U = T
@@ -146,7 +146,7 @@ protected:
   template<
     typename U = T
   >
-  void resetROS2Impl(std::shared_ptr<rclcpp::node::Node> node, typename std::enable_if<!is_ros2_message<U>::value>::type * = nullptr)
+  void resetROS2Impl(std::shared_ptr<rclcpp::Node> node, typename std::enable_if<!is_ros2_message<U>::value>::type * = nullptr)
   {
     //static_assert(false, "This should never be reachable");
   }
@@ -154,7 +154,7 @@ protected:
   template<
     typename U = T
   >
-  void resetROS2Impl(std::shared_ptr<rclcpp::node::Node> node, typename std::enable_if<is_ros2_message<U>::value>::type * = nullptr)
+  void resetROS2Impl(std::shared_ptr<rclcpp::Node> node, typename std::enable_if<is_ros2_message<U>::value>::type * = nullptr)
   {
     publisher_ = node->create_publisher<U>(this->topic_, 10);
     is_initialized_ = true;

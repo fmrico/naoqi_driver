@@ -145,7 +145,7 @@ Driver::Driver( qi::SessionPtr session, const std::string& prefix )
   ros2_executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
   std::cout << "ROS2 node init" << std::endl;
-  ros2_node_ = std::make_shared<rclcpp::node::Node>("~");
+  ros2_node_ = std::make_shared<rclcpp::Node>("~");
 
   ros2_executor_->add_node(ros2_node_);
 }

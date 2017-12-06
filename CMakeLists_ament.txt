@@ -7,15 +7,23 @@ if(ament_cmake_FOUND)
   ament_export_libraries(${PROJECT_NAME})
 endif()
 
+find_package(rclcpp REQUIRED)
+find_package(naoqi_bridge_msgs REQUIRED)
+
 include(cmake/find_ros1_package.cmake)
 include(cmake/find_ros1_interface_packages.cmake)
+
+find_package(BZip2 REQUIRED)
+add_definitions(${BZIP2_DEFINITIONS})
 
 find_package(PkgConfig REQUIRED)
 
 #find_ros1_package(catkin REQUIRED)
 
+find_ros1_package(roslz4 REQUIRED)
 # CMake file that uses catkin
 find_ros1_package(cv_bridge REQUIRED)
+find_ros1_package(rosconsole REQUIRED)
 find_ros1_package(diagnostic_msgs REQUIRED)
 find_ros1_package(diagnostic_updater REQUIRED)
 find_ros1_package(geometry_msgs REQUIRED)
@@ -29,15 +37,14 @@ find_ros1_package(sensor_msgs REQUIRED)
 find_ros1_package(tf2_geometry_msgs REQUIRED)
 find_ros1_package(tf2_msgs REQUIRED)
 find_ros1_package(tf2_ros REQUIRED)
+find_ros1_package(urdf REQUIRED)
+find_ros1_package(urdfdom_headers REQUIRED)
 
 find_package(OpenCV REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(naoqi_libqi REQUIRED)
 find_package(naoqi_libqicore REQUIRED)
-
-find_package(rclcpp REQUIRED)
-find_package(naoqi_bridge_msgs REQUIRED)
-
+find_package(Boost REQUIRED)
 add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
 
 #catkin_package(LIBRARIES naoqi_driver_module naoqi_driver)
@@ -46,7 +53,17 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=deprecated-declarations")
 endif()
 
-include_directories( include ${naoqi_libqi_INCLUDE_DIRS} ${})
+include_directories(
+  include
+  ${naoqi_libqi_INCLUDE_DIRS}
+  ${BZIP2_INCLUDE_DIR}
+  ${ros1_roslz4_INCLUDE_DIRS}
+  ${naoqi_bridge_interfaces_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${ros1_rosconsole_INCLUDE_DIRS}
+  ${ros1_urdfdom_headers_INCLUDE_DIRS}
+  ${ros1_urdf_INCLUDE_DIRS}
+)
 
 # create the different libraries
 add_library(
@@ -54,7 +71,7 @@ add_library(
   SHARED
   src/autoload_registration.cpp
   )
-target_link_libraries(naoqi_driver_module ${naoqi_libqi_LIBRARIES})
+target_link_libraries(naoqi_driver_module ${naoqi_libqi_LIBRARIES} ${ros1_roslz4_LIBRARIES})
 install(
   TARGETS naoqi_driver_module
   ARCHIVE DESTINATION lib

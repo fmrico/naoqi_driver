@@ -88,7 +88,7 @@ public:
   * this will be called at first for initialization or again when master uri has changed
   * @param ros NodeHandle to advertise the publisher on
   */
-  void reset( std::shared_ptr<rclcpp::node::Node> node )
+  void reset( std::shared_ptr<rclcpp::Node> node )
   {
     std::cout << topic() << " is resetting" << std::endl;
     pubPtr_->reset( node );
@@ -128,7 +128,7 @@ private:
     virtual bool isInitialized() const = 0;
     virtual bool isSubscribed() const = 0;
     virtual void reset( ros::NodeHandle& nh ) = 0;
-    virtual void reset( std::shared_ptr<rclcpp::node::Node> node ) = 0;
+    virtual void reset( std::shared_ptr<rclcpp::Node> node ) = 0;
     virtual std::string topic() const = 0;
   };
 
@@ -163,7 +163,7 @@ private:
       publisher_->reset( nh );
     }
 
-    void reset( std::shared_ptr<rclcpp::node::Node> node )
+    void reset( std::shared_ptr<rclcpp::Node> node )
     {
       publisher_->reset( node );
     }
