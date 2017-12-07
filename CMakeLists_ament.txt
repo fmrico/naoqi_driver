@@ -9,9 +9,17 @@ endif()
 
 find_package(rclcpp REQUIRED)
 find_package(naoqi_bridge_msgs REQUIRED)
+find_package(orocos_kdl REQUIRED)
+find_package(naoqi_libqi REQUIRED)
+add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
+
+find_package(naoqi_libqicore REQUIRED)
+find_package(Boost REQUIRED COMPONENTS chrono filesystem program_options regex system thread)
+find_package(poco_vendor REQUIRED)
+find_package(Poco COMPONENTS Foundation)
+find_package(urdfdom REQUIRED)
 
 include(cmake/find_ros1_package.cmake)
-include(cmake/find_ros1_interface_packages.cmake)
 
 find_package(BZip2 REQUIRED)
 add_definitions(${BZIP2_DEFINITIONS})
@@ -20,34 +28,34 @@ find_package(PkgConfig REQUIRED)
 
 #find_ros1_package(catkin REQUIRED)
 
-find_ros1_package(roslz4 REQUIRED)
-# CMake file that uses catkin
-find_ros1_package(cv_bridge REQUIRED)
-find_ros1_package(rosconsole REQUIRED)
+find_ros1_package(opencv-3.3.1 REQUIRED)
+
 find_ros1_package(diagnostic_msgs REQUIRED)
-find_ros1_package(diagnostic_updater REQUIRED)
 find_ros1_package(geometry_msgs REQUIRED)
-find_ros1_package(image_transport REQUIRED)
-find_ros1_package(kdl_parser REQUIRED)
 find_ros1_package(naoqi_bridge_msgs REQUIRED)
-find_ros1_package(robot_state_publisher REQUIRED)
-find_ros1_package(rosbag_storage REQUIRED)
 find_ros1_package(rosgraph_msgs REQUIRED)
 find_ros1_package(sensor_msgs REQUIRED)
 find_ros1_package(tf2_geometry_msgs REQUIRED)
 find_ros1_package(tf2_msgs REQUIRED)
+
+find_ros1_package(tinyxml2 REQUIRED)
+
+include(cmake/find_ros1_interface_packages.cmake)
+find_ros1_interface_packages(ros1_message_packages)
+
+#catkin_package(LIBRARIES naoqi_driver_module naoqi_driver)
+find_ros1_package(console_bridge REQUIRED)
+find_ros1_package(cv_bridge REQUIRED)
+find_ros1_package(roscpp REQUIRED)
+find_ros1_package(rosconsole REQUIRED)
+find_ros1_package(diagnostic_updater REQUIRED)
+find_ros1_package(image_transport REQUIRED)
+find_ros1_package(kdl_parser REQUIRED)
+find_ros1_package(robot_state_publisher REQUIRED)
+find_ros1_package(rosbag_storage REQUIRED)
 find_ros1_package(tf2_ros REQUIRED)
 find_ros1_package(urdf REQUIRED)
 find_ros1_package(urdfdom_headers REQUIRED)
-
-find_package(OpenCV REQUIRED)
-find_package(orocos_kdl REQUIRED)
-find_package(naoqi_libqi REQUIRED)
-find_package(naoqi_libqicore REQUIRED)
-find_package(Boost REQUIRED)
-add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
-
-#catkin_package(LIBRARIES naoqi_driver_module naoqi_driver)
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=deprecated-declarations")
@@ -57,12 +65,13 @@ include_directories(
   include
   ${naoqi_libqi_INCLUDE_DIRS}
   ${BZIP2_INCLUDE_DIR}
-  ${ros1_roslz4_INCLUDE_DIRS}
   ${naoqi_bridge_interfaces_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${ros1_rosconsole_INCLUDE_DIRS}
   ${ros1_urdfdom_headers_INCLUDE_DIRS}
   ${ros1_urdf_INCLUDE_DIRS}
+  ${ros1_opencv-3.3.1_INCLUDE_DIRS}
+  ${lz4_INCLUDE_DIRS}
 )
 
 # create the different libraries
@@ -71,7 +80,13 @@ add_library(
   SHARED
   src/autoload_registration.cpp
   )
-target_link_libraries(naoqi_driver_module ${naoqi_libqi_LIBRARIES} ${ros1_roslz4_LIBRARIES})
+
+
+target_link_libraries(naoqi_driver_module
+  ${naoqi_libqi_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${Poco_LIBRARIES}
+)
 install(
   TARGETS naoqi_driver_module
   ARCHIVE DESTINATION lib
@@ -92,18 +107,18 @@ add_library(
 )
 ament_target_dependencies(naoqi_driver rclcpp naoqi_bridge_msgs)
 
-target_link_libraries(
-  naoqi_driver
-  ${OpenCV_LIBRARIES}
+target_link_libraries(naoqi_driver
   ${orocos_kdl_LIBRARIES}
   ${naoqi_libqi_LIBRARIES}
   ${naoqi_libqicore_LIBRARIES}
   ${ros1_tf2_ros_LIBRARIES}
   ${ros1_kdl_parser_LIBRARIES}
   ${ros1_cv_bridge_LIBRARIES}
+  ${ros1_opencv-3.3.1_LIBRARIES}
   ${ros1_rosbag_storage_LIBRARIES}
   ${ros1_image_transport_LIBRARIES}
-  )
+  ${Poco_LIBRARIES}
+)
 #add_dependencies(naoqi_driver ${catkin_EXPORTED_TARGETS})
 install(
   TARGETS naoqi_driver
@@ -115,22 +130,31 @@ install(
 target_link_libraries(
   naoqi_driver_module
   naoqi_driver
+  ${Poco_LIBRARIES}
 )
 
 # create the binary of the bridge
-add_executable( naoqi_driver_node src/external_registration.cpp)
+add_executable(naoqi_driver_node
+  src/external_registration.cpp)
 target_link_libraries(
   naoqi_driver_node
   naoqi_driver
-  ${OpenCV_LIBRARIES}
   ${orocos_kdl_LIBRARIES}
   ${naoqi_libqi_LIBRARIES}
   ${naoqi_libqicore_LIBRARIES}
   ${ros1_tf2_ros_LIBRARIES}
   ${ros1_kdl_parser_LIBRARIES}
   ${ros1_cv_bridge_LIBRARIES}
+  ${ros1_opencv-3.3.1_LIBRARIES}
   ${ros1_rosbag_storage_LIBRARIES}
   ${ros1_image_transport_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${ros1_console_bridge_LIBRARIES}
+  ${lz4_LIBRARIES}
+  ${ros1_tinyxml2_LIBRARIES}
+  ${TinyXML_LIBRARY}
+  ${PYTHON2_LIBRARY}
+  ${urdfdom_LIBRARIES}
 )
 install(
   TARGETS naoqi_driver_node
