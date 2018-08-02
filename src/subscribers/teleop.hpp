@@ -45,6 +45,7 @@ public:
   void reset( ros::NodeHandle& nh );
   void cmd_vel_callback( const geometry_msgs::TwistConstPtr& twist_msg );
   void joint_angles_callback( const naoqi_bridge_msgs::JointAnglesWithSpeedConstPtr& js_msg );
+  void timerCB( const ros::TimerEvent& );
 
 private:
 
@@ -56,6 +57,9 @@ private:
   ros::Subscriber sub_cmd_vel_;
   ros::Subscriber sub_joint_angles_;
 
+  ros::Time last_move_ts;
+  ros::Timer timer_;
+  int callback_timer_;
 
 
 }; // class Teleop
