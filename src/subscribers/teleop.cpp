@@ -31,14 +31,16 @@ TeleopSubscriber::TeleopSubscriber( const std::string& name, const std::string& 
   joint_angles_topic_(joint_angles_topic),
   BaseSubscriber( name, cmd_vel_topic, session ),
   p_motion_( session->service("ALMotion") ),
-  p_motion_controller_( session->service("MotionController") )
-{}
+  p_motion_controller_( session->service("MotionController") ) {
+    callback_timer_ = 2;
+    last_move_ts = ros::Time::now();
+  }
 
 void TeleopSubscriber::reset( ros::NodeHandle& nh )
 {
   sub_cmd_vel_ = nh.subscribe( cmd_vel_topic_, 10, &TeleopSubscriber::cmd_vel_callback, this );
   sub_joint_angles_ = nh.subscribe( joint_angles_topic_, 10, &TeleopSubscriber::joint_angles_callback, this );
-
+  timer_	=	nh.createTimer(ros::Duration(callback_timer_), &TeleopSubscriber::timerCB, this, false);
   is_initialized_ = true;
 }
 
@@ -52,6 +54,7 @@ void TeleopSubscriber::cmd_vel_callback( const geometry_msgs::TwistConstPtr& twi
   std::cout << "going to move x: " << vel_x << " y: " << vel_y << " th: " << vel_th << std::endl;
   //p_motion_.async<void>("move", vel_x, vel_y, vel_th );
   p_motion_controller_.async<void>("move", vel_x, vel_y, vel_th );
+  last_move_ts = ros::Time::now();
 }
 
 void TeleopSubscriber::joint_angles_callback( const naoqi_bridge_msgs::JointAnglesWithSpeedConstPtr& js_msg )
@@ -63,6 +66,12 @@ void TeleopSubscriber::joint_angles_callback( const naoqi_bridge_msgs::JointAngl
   else
   {
     p_motion_.async<void>("changeAngles", js_msg->joint_names, js_msg->joint_angles, js_msg->speed);
+  }
+}
+
+void TeleopSubscriber::timerCB( const ros::TimerEvent& ) {
+  if(ros::Time::now() > last_move_ts + ros::Duration(2)) {
+    p_motion_controller_.async<void>("move", 0, 0, 0);
   }
 }
 
