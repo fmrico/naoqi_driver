@@ -33,7 +33,7 @@ TeleopSubscriber::TeleopSubscriber( const std::string& name, const std::string& 
   p_motion_( session->service("ALMotion") )
 {
   callback_timer_ = 2;
-- last_move_ts = ros::Time::now();
+  last_move_ts = ros::Time::now();
 }
 
 void TeleopSubscriber::reset( ros::NodeHandle& nh )
